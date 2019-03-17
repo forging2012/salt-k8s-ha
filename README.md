@@ -1,5 +1,5 @@
 # SaltStack自动化部署HA-Kubernetes
-- 本项目在GitHub上，会不定期更新，大家也可以提交ISSUE，地址为：`https://github.com/skymyyang/salt-k8s-ha`
+- 本项目在GitHub上，会不定期更新，大家也可以提交ISSUE，地址为：`https://github.com/sky-daiji/salt-k8s-ha`
 - SaltStack自动化部署Kubernetes v1.12.5版本（支持HA、TLS双向认证、RBAC授权、Flannel网络、ETCD集群、Kuber-Proxy使用LVS等）。
 - 该项目也兼容kubernetes v1.13.3版本，亲测可用。只需将原版本目录中 `/srv/salt/k8s/files/k8s-v1.12.5/bin` 的bin目录下的二进制文件替换为新版本即可；其他无需更改。
 
@@ -22,18 +22,6 @@
 
 ## 技术交流QQ群（加群请备注来源于Github）：
 - Docker&Kubernetes：796163694
-
-- 关于本帖子上的手动部署，我还没有进行验证和修改，还只能适用于原作者的1.10.3版本；感兴趣的同学可以看一下两位作者的教程。
-
-- 本教程的来源于以下教程而生成，在此特别感谢两位作者。
-
-  和我一步步部署 kubernetes 集群   `https://github.com/opsnull/follow-me-install-kubernetes-cluster`
-
-  SaltStack自动化部署Kubernetes    `https://github.com/unixhot/salt-kubernetes`
-
-## 案例架构图
-
-  ![架构图](https://skymyyang.github.io/img/k8s-ha.jpg)
 
 ## 0.系统初始化(必备)
 
@@ -107,7 +95,7 @@ linux-node4
 2.2 获取本项目代码，并放置在 `/srv` 目录
 
 ```bash
-[root@linux-node1 ~]# git clone https://github.com/skymyyang/salt-k8s-ha.git
+[root@linux-node1 ~]# git clone https://github.com/sky-daiji/salt-k8s-ha.git
 [root@linux-node1 ~]# cd salt-k8s-ha/
 [root@linux-node1 ~]# mv * /srv/
 [root@linux-node1 srv]# /bin/cp /srv/roster /etc/salt/roster
@@ -415,6 +403,4 @@ kube-proxy-zgg6t          1/1     Running   2          16h
 ```
 #### 如果你觉得这个项目不错，欢迎各位打赏，你的打赏是对我们的认可，是我们的动力。
 
-![支付宝支付](https://skymyyang.github.io/img/zfb3.png)
-
-![微信支付](https://skymyyang.github.io/img/wx1.png)
+![微信支付](https://github.com/sky-daiji/salt-kubernetes/blob/master/images/weixin.png)
