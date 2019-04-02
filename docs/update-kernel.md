@@ -44,7 +44,7 @@ systemctl enable --now chronyd
 ```bash
 yum install wget git  jq psmisc vim -y
 wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
-yum install https://mirrors.aliyun.com/saltstack/yum/redhat/salt-repo-latest-2.el7.noarch.rpm
+yum install https://mirrors.aliyun.com/saltstack/yum/redhat/salt-repo-latest.el7.noarch.rpm
 sed -i "s/repo.saltstack.com/mirrors.aliyun.com\/saltstack/g" /etc/yum.repos.d/salt-latest.repo
 yum update -y
 ```
