@@ -18,10 +18,10 @@
 
 IP地址 | Hostname | 最小配置 | Kernel Version
 ---|--- | --- | --- |
-192.168.245.128 | linux-node1 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
-192.168.245.129 | linux-node2 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
-192.168.245.130 | linux-node3 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
-192.168.245.131 | linux-node4 | Centos7.6 1G 1CPU | 4.18.16-1.el7.elrepo.x86_64
+192.168.245.128 | linux-node1 | Centos7.6 2G 2CPU | 4.18.9-1.el7.elrepo.x86_64
+192.168.245.129 | linux-node2 | Centos7.6 2G 2CPU | 4.18.9-1.el7.elrepo.x86_64
+192.168.245.130 | linux-node3 | Centos7.6 2G 2CPU | 4.18.9-1.el7.elrepo.x86_64
+192.168.245.131 | linux-node4 | Centos7.6 1G 1CPU | 4.18.9-1.el7.elrepo.x86_64
 
 ## 架构介绍
 1. 使用Salt Grains进行角色定义，增加灵活性。
