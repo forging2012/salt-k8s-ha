@@ -1,5 +1,5 @@
 # SaltStack自动化部署HA-Kubernetes
-- 本项目在GitHub上，会不定期更新，大家也可以提交ISSUE，地址为：`https://github.com/skymyyang/salt-k8s-ha`
+- 本项目在GitHub上，会不定期更新，大家也可以提交ISSUE，地址为：`https://github.com/sky-daiji/salt-k8s-ha`
 - SaltStack自动化部署Kubernetes v1.13.4版本（支持HA、TLS双向认证、RBAC授权、Flannel网络、ETCD集群、Kuber-Proxy使用LVS等）。
 
 
