@@ -6,7 +6,7 @@
 # Description:  Kubernetes API Server
 #******************************************
 
-{% set k8s_version = "k8s-v1.12.5" %}
+{% set k8s_version = "k8s-v1.13.4" %}
 
 kube-api-server-csr-json:
   file.managed:
@@ -21,7 +21,6 @@ kube-api-server-csr-json:
         MASTER_IP_M2: {{ pillar['MASTER_IP_M2'] }}
         MASTER_IP_M3: {{ pillar['MASTER_IP_M3'] }}
         CLUSTER_KUBERNETES_SVC_IP: {{ pillar['CLUSTER_KUBERNETES_SVC_IP'] }}
-        MASTER_VIP: {{ pillar['MASTER_VIP'] }}
   cmd.run:
     - name: cd /opt/kubernetes/ssl && /opt/kubernetes/bin/cfssl gencert -ca=/opt/kubernetes/ssl/ca.pem -ca-key=/opt/kubernetes/ssl/ca-key.pem -config=/opt/kubernetes/ssl/ca-config.json -profile=kubernetes kubernetes-csr.json | /opt/kubernetes/bin/cfssljson -bare kubernetes
     - unless: test -f /opt/kubernetes/ssl/kubernetes.pem
@@ -68,15 +67,10 @@ kube-apiserver-service:
         SERVICE_CIDR: {{ pillar['SERVICE_CIDR'] }}
         NODE_PORT_RANGE: {{ pillar['NODE_PORT_RANGE'] }}
         ETCD_ENDPOINTS: {{ pillar['ETCD_ENDPOINTS'] }}
-  pkg.installed:
-    - names:
-      - ipvsadm
-      - ipset
-      - conntrack-tools
   cmd.run:
     - name: systemctl daemon-reload
   service.running:
-    - name: kube-apiserver 
+    - name: kube-apiserver
     - enable: True
     - watch:
       - file: kube-apiserver-service
@@ -117,3 +111,8 @@ apiserver-to-kubelet-rbac:
     - template: jinja
   cmd.run:
     - name: /opt/kubernetes/bin/kubectl delete -f /opt/kubernetes/cfg/apiserver-to-kubelet-rbac.yaml;/opt/kubernetes/bin/kubectl create -f /opt/kubernetes/cfg/apiserver-to-kubelet-rbac.yaml
+
+#--authentication-kubeconfig 和 --authorization-kubeconfig 参数指定的证书需要有创建 "subjectaccessreviews" 的权限
+kube-controller-manager-clusterrole:
+  cmd.run:
+    - name: /opt/kubernetes/bin/kubectl create clusterrolebinding controller-manager:system:auth-delegator --user system:kube-controller-manager --clusterrole system:auth-delegator

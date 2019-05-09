@@ -6,7 +6,7 @@
 # Description:  Kubernetes Node kubelet
 #******************************************
 
-{% set k8s_version = "k8s-v1.12.5" %}
+{% set k8s_version = "k8s-v1.13.4" %}
 
 
 include:
@@ -20,7 +20,7 @@ kubelet-workdir:
 #创建 kubelet bootstrap kubeconfig 文件
 kubeconfig-set-cluster:
   cmd.run:
-    - name: cd /opt/kubernetes/cfg && /opt/kubernetes/bin/kubectl config set-cluster kubernetes --certificate-authority=/opt/kubernetes/ssl/ca.pem --embed-certs=true --server=https://{{ pillar['MASTER_VIP'] }}:8443 --kubeconfig=kubelet-bootstrap.kubeconfig
+    - name: cd /opt/kubernetes/cfg && /opt/kubernetes/bin/kubectl config set-cluster kubernetes --certificate-authority=/opt/kubernetes/ssl/ca.pem --embed-certs=true --server={{ pillar['KUBE_APISERVER'] }} --kubeconfig=kubelet-bootstrap.kubeconfig
 
 kubeconfig-set-credentials:
   cmd.run:
@@ -52,6 +52,7 @@ kubelet-config-yaml:
     - defaults:
         CLUSTER_DNS_SVC_IP: {{ pillar['CLUSTER_DNS_SVC_IP'] }}
         CLUSTER_DNS_DOMAIN: {{ pillar['CLUSTER_DNS_DOMAIN'] }}
+        POD_CIDR: {{ pillar['POD_CIDR'] }}
 kubelet-service:
   file.managed:
     - name: /usr/lib/systemd/system/kubelet.service
@@ -70,8 +71,8 @@ kubelet-service:
     - ROLES: "node"
     {% endif %}
     - defaults:
-        HOST_NAME: {{ pillar['HOST_NAME'] }}
-        
+        HOST_NAME: {{ grains['fqdn'] }}
+
   cmd.run:
     - name: systemctl daemon-reload
   service.running:
