@@ -1,4 +1,4 @@
-# SaltStack自动化部署HA-Kubernetes
+SaltStack自动化部署HA-Kubernetes
 - 本项目在GitHub上，会不定期更新，大家也可以提交ISSUE，地址为：`https://github.com/sky-daiji/salt-k8s-ha`
 - SaltStack自动化部署Kubernetes v1.12.5版本（支持HA、TLS双向认证、RBAC授权、Flannel网络、ETCD集群、Kuber-Proxy使用LVS等）。
 - 该项目也兼容kubernetes v1.13.3版本，亲测可用。只需将原版本目录中 `/srv/salt/k8s/files/k8s-v1.12.5/bin` 的bin目录下的二进制文件替换为新版本即可；其他无需更改。
@@ -13,7 +13,7 @@
 - CNI-Plugins： v0.7.0
 建议部署节点：最少三个Master节点，请配置好主机名解析（必备）。
 
-## 架构介绍
+## 架构介绍1111111
 1. 使用Salt Grains进行角色定义，增加灵活性。
 2. 使用Salt Pillar进行配置项管理，保证安全性。
 3. 使用Salt SSH执行状态，不需要安装Agent，保证通用性。
