@@ -7,9 +7,9 @@
 #********************************************
 
 #设置Master的IP地址(必须修改)
-MASTER_IP_M1: "192.168.150.141"
-MASTER_IP_M2: "192.168.150.142"
-MASTER_IP_M3: "192.168.150.143"
+MASTER_IP_M1: "192.168.245.128"
+MASTER_IP_M2: "192.168.245.129"
+MASTER_IP_M3: "192.168.245.130"
 #设置Master的HOSTNAME完整的FQDN名称(必须修改)
 MASTER_H1: "linux-node1"
 MASTER_H2: "linux-node2"
@@ -19,12 +19,12 @@ MASTER_H3: "linux-node3"
 KUBE_APISERVER: "https://127.0.0.1:8443"
 
 #设置ETCD集群访问地址（必须修改）
-ETCD_ENDPOINTS: "https://192.168.150.141:2379,https://192.168.150.142:2379,https://192.168.150.143:2379"
+ETCD_ENDPOINTS: "https://192.168.245.128:2379,https://192.168.245.129:2379,https://192.168.245.130:2379"
 
 FLANNEL_ETCD_PREFIX: "/kubernetes/network"
 
 #设置ETCD集群初始化列表（必须修改）
-ETCD_CLUSTER: "etcd-node1=https://192.168.150.141:2380,etcd-node2=https://192.168.150.142:2380,etcd-node3=https://192.168.150.143:2380"
+ETCD_CLUSTER: "etcd-node1=https://192.168.245.128:2380,etcd-node2=https://192.168.245.129:2380,etcd-node3=https://192.168.245.130:2380"
 
 #通过Grains FQDN自动获取本机IP地址，请注意保证主机名解析到本机IP地址
 NODE_IP: {{ grains['fqdn_ip4'][0] }}
@@ -58,7 +58,7 @@ CLUSTER_DNS_DOMAIN: "cluster.local."
 #DOCKER_REGISTRY: "https://192.168.150.135:5000"
 
 #设置Master的VIP地址(必须修改)
-MASTER_VIP: "192.168.150.253"
+MASTER_VIP: "192.168.245.253"
 
 #设置网卡名称
-VIP_IF: "ens32"
+VIP_IF: "{{ grains['ip4_interfaces'].keys()[1] }}"

@@ -116,32 +116,35 @@ linux-node4
 [root@linux-node1 ~]# yum install -y salt-ssh git unzip p7zip
 ```
 
-2.2 获取本项目 `1.13-Release` 分支代码，并放置在 `/srv` 目录
+2.2 获取本项目 `1.13.6` 分支代码，并放置在 `/srv` 目录
 
 ```bash
-[root@linux-node1 ~]# git clone -b 1.13-Release https://github.com/skymyyang/salt-k8s-ha.git
+[root@linux-node1 ~]# git clone -b 1.13.6 https://github.com/sky-daiji/salt-k8s-ha.git
 [root@linux-node1 ~]# cd salt-k8s-ha/
 [root@linux-node1 ~]# mv * /srv/
 [root@linux-node1 srv]# /bin/cp /srv/roster /etc/salt/roster
 [root@linux-node1 srv]# /bin/cp /srv/master /etc/salt/master
 ```
 
-2.4 下载二进制文件，也可以自行官方下载，为了方便国内用户访问，请在百度云盘下载,下载 `k8s-v1.13.4-auto.7z` 。
+2.4 下载二进制文件，也可以自行官方下载，为了方便国内用户访问，请在百度云盘下载,下载 `k8s-v1.13.6-auto` 。
 下载完成后，将文件移动到 `/srv/salt/k8s/` 目录下，并解压，注意是 `files` 目录在 `/srv/salt/k8s/`目录下。
 Kubernetes二进制文件下载地址： 链接：`https://pan.baidu.com/s/1CdhDg_PeHXrKZT8NrgXB1Q`
 提取码：`1kmo`
 
 ```bash
 [root@linux-node1 ~]# cd /srv/salt/k8s/
-[root@linux-node1 k8s]# 7za x k8s-v1.13.4-auto.7z -r -o./
-[root@linux-node1 k8s]# rm -f k8s-v1.13.4-auto.7z
+[root@linux-node1 k8s]# unzip k8s-v1.13.6-auto.zip
+[root@linux-node1 k8s]# cd k8s-v1.13.3-auto/
+[root@linux-node1 k8s-v1.13.6-auto]# mv files/ /srv/salt/k8s/
+[root@linux-node1 k8s-v1.13.6-auto]# cd ..
+[root@k8s-master k8s]# rm -rf k8s-v1.13.6-auto*
 [root@linux-node1 k8s]# ls -l files/
 total 0
 drwx------ 2 root root  94 Mar 18 13:41 cfssl-1.2
 drwx------ 2 root root 195 Mar 18 13:41 cni-plugins-amd64-v0.7.4
-drwx------ 3 root root 123 Mar 18 13:41 etcd-v3.3.10-linux-amd64
-drwx------ 2 root root  47 Mar 18 13:41 flannel-v0.10.0-linux-amd64
-drwx------ 3 root root  17 Mar 18 13:41 k8s-v1.13.4
+drwx------ 3 root root 123 Mar 18 13:41 etcd-v3.3.12-linux-amd64
+drwx------ 2 root root  47 Mar 18 13:41 flannel-v0.11.0-linux-amd64
+drwx------ 3 root root  17 Mar 18 13:41 k8s-v1.13.6
 drwx------ 2 root root  33 Mar 18 20:17 nginx-1.15.3
 ```
 
@@ -247,7 +250,7 @@ CLUSTER_DNS_DOMAIN: "cluster.local."
 #DOCKER_REGISTRY: "https://192.168.150.135:5000"
 
 #设置Master的VIP地址(必须修改)
-MASTER_VIP: "192.168.150.253"
+MASTER_VIP: "192.168.245.253"
 
 #设置网卡名称
 VIP_IF: "{{ grains['ip4_interfaces'].keys()[1] }}"
