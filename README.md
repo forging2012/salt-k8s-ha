@@ -13,7 +13,7 @@ SaltStack自动化部署HA-Kubernetes
 - CNI-Plugins： v0.7.0
 建议部署节点：最少三个Master节点，请配置好主机名解析（必备）。
 
-## 架构介绍1111111
+## 架构介绍
 1. 使用Salt Grains进行角色定义，增加灵活性。
 2. 使用Salt Pillar进行配置项管理，保证安全性。
 3. 使用Salt SSH执行状态，不需要安装Agent，保证通用性。
