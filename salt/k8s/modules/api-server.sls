@@ -6,7 +6,7 @@
 # Description:  Kubernetes API Server
 #******************************************
 
-{% set k8s_version = "k8s-v1.13.4" %}
+{% set k8s_version = "k8s-v1.13.6" %}
 
 kube-api-server-csr-json:
   file.managed:

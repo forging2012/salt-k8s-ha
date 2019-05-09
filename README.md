@@ -3,14 +3,14 @@
 - SaltStack自动化部署Kubernetes v1.13.4版本（支持HA、TLS双向认证、RBAC授权、Flannel网络、ETCD集群、Kuber-Proxy使用LVS等）。
 
 
-## 版本明细：Release-v1.13.4
+## 版本明细：Release-v1.13.6
 - 测试通过系统：CentOS 7.6
-- Kernel Version: 4.18.16-1.el7.elrepo.x86_64
+- Kernel Version: 4.18.9-1.el7.elrepo.x86_64
 - salt-ssh:     salt-ssh 2019.2.0-1
-- Kubernetes：  v1.13.4
+- Kubernetes：  v1.13.6
 - Etcd:         v3.3.12
 - Docker:       18.09.3
-- Flannel：     v0.10.0
+- Flannel：     v0.11.0
 - CNI-Plugins： v0.7.4
 - nginx:        v1.15.3
 
@@ -18,16 +18,16 @@
 
 IP地址 | Hostname | 最小配置 | Kernel Version
 ---|--- | --- | --- |
-192.168.150.141 | linux-node1 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
-192.168.150.142 | linux-node2 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
-192.168.150.143 | linux-node3 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
-192.168.150.144 | linux-node4 | Centos7.6 1G 1CPU | 4.18.16-1.el7.elrepo.x86_64
+192.168.245.128 | linux-node1 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
+192.168.245.129 | linux-node2 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
+192.168.245.130 | linux-node3 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
+192.168.245.131 | linux-node4 | Centos7.6 1G 1CPU | 4.18.16-1.el7.elrepo.x86_64
 
 ## 架构介绍
 1. 使用Salt Grains进行角色定义，增加灵活性。
 2. 使用Salt Pillar进行配置项管理，保证安全性。
 3. 使用Salt SSH执行状态，不需要安装Agent，保证通用性。
-4. 使用Kubernetes当前稳定版本v1.13.4，保证稳定性。
+4. 使用Kubernetes当前稳定版本v1.13.6，保证稳定性。
 5. 使用nginx来保证集群的高可用。
 6. KeepAlive+VIP的形式完成高可用的缺点
     - 受限于使用者的网络，无法适用于SDN网络，比如Aliyun的VPC
@@ -71,10 +71,10 @@ linux-node4
 [root@linux-node1 ~]# cat /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-192.168.150.141 linux-node1
-192.168.150.142 linux-node2
-192.168.150.143 linux-node3
-192.168.150.144 linux-node4
+192.168.245.128 linux-node1
+192.168.245.129 linux-node2
+192.168.245.130 linux-node3
+192.168.245.131 linux-node4
 ```
 
 3. 关闭SELinux和防火墙以及NetworkManager
@@ -154,7 +154,7 @@ drwx------ 2 root root  33 Mar 18 20:17 nginx-1.15.3
 ```yaml
 [root@linux-node1 ~]# vim /etc/salt/roster
 linux-node1:
-  host: 192.168.150.141
+  host: 192.168.245.128
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -164,7 +164,7 @@ linux-node1:
       etcd-name: etcd-node1
 
 linux-node2:
-  host: 192.168.150.142
+  host: 192.168.245.129
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -174,7 +174,7 @@ linux-node2:
       etcd-name: etcd-node2
 
 linux-node3:
-  host: 192.168.150.143
+  host: 192.168.245.130
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -184,7 +184,7 @@ linux-node3:
       etcd-name: etcd-node3
 
 linux-node4:
-  host: 192.168.150.144
+  host: 192.168.245.131
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -196,9 +196,9 @@ linux-node4:
 ```bash
 [root@k8s-m1 ~]# vim /srv/pillar/k8s.sls
 #设置Master的IP地址(必须修改)
-MASTER_IP_M1: "192.168.150.141"
-MASTER_IP_M2: "192.168.150.142"
-MASTER_IP_M3: "192.168.150.143"
+MASTER_IP_M1: "192.168.245.128"
+MASTER_IP_M2: "192.168.245.129"
+MASTER_IP_M3: "192.168.245.130"
 #设置Master的HOSTNAME完整的FQDN名称(必须修改)
 MASTER_H1: "linux-node1"
 MASTER_H2: "linux-node2"
@@ -208,12 +208,12 @@ MASTER_H3: "linux-node3"
 KUBE_APISERVER: "https://127.0.0.1:8443"
 
 #设置ETCD集群访问地址（必须修改）
-ETCD_ENDPOINTS: "https://192.168.150.141:2379,https://192.168.150.142:2379,https://192.168.150.143:2379"
+ETCD_ENDPOINTS: "https://192.168.245.128:2379,https://192.168.245.129:2379,https://192.168.245.130:2379"
 
 FLANNEL_ETCD_PREFIX: "/kubernetes/network"
 
 #设置ETCD集群初始化列表（必须修改）
-ETCD_CLUSTER: "etcd-node1=https://192.168.150.141:2380,etcd-node2=https://192.168.150.142:2380,etcd-node3=https://192.168.150.143:2380"
+ETCD_CLUSTER: "etcd-node1=https://192.168.245.128:2380,etcd-node2=https://192.168.245.129:2380,etcd-node3=https://192.168.245.130:2380"
 
 #通过Grains FQDN自动获取本机IP地址，请注意保证主机名解析到本机IP地址
 NODE_IP: {{ grains['fqdn_ip4'][0] }}
@@ -250,7 +250,7 @@ CLUSTER_DNS_DOMAIN: "cluster.local."
 MASTER_VIP: "192.168.150.253"
 
 #设置网卡名称
-VIP_IF: "ens32"
+VIP_IF: "{{ grains['ip4_interfaces'].keys()[1] }}"
 
 ```
 
@@ -289,11 +289,11 @@ VIP_IF: "ens32"
 ```
 #先验证etcd
 [root@linux-node1 ~]# source /etc/profile
-[root@linux-node1 ~]# etcdctl --endpoints=https://192.168.150.141:2379 \
+[root@linux-node1 ~]# etcdctl --endpoints=https://192.168.245.128:2379 \
   --ca-file=/opt/kubernetes/ssl/ca.pem \
   --cert-file=/opt/kubernetes/ssl/etcd.pem \
   --key-file=/opt/kubernetes/ssl/etcd-key.pem cluster-health
-[root@linux-node1 ~]# etcdctl --endpoints=https://192.168.150.141:2379 \
+[root@linux-node1 ~]# etcdctl --endpoints=https://192.168.245.128:2379 \
   --ca-file=/opt/kubernetes/ssl/ca.pem \
   --cert-file=/opt/kubernetes/ssl/etcd.pem \
   --key-file=/opt/kubernetes/ssl/etcd-key.pem member list
@@ -306,10 +306,10 @@ etcd-1               Healthy   {"health":"true"}
 etcd-0               Healthy   {"health":"true"}  
 [root@linux-node1 ~]# kubectl get node
 NAME          STATUS   ROLES    AGE     VERSION
-linux-node1   Ready    master   3h12m   v1.13.4
-linux-node2   Ready    master   3h12m   v1.13.4
-linux-node3   Ready    master   3h13m   v1.13.4
-linux-node4   Ready    node     3h14m   v1.13.4
+linux-node1   Ready    master   3h12m   v1.13.6
+linux-node2   Ready    master   3h12m   v1.13.6
+linux-node3   Ready    master   3h13m   v1.13.6
+linux-node4   Ready    node     3h14m   v1.13.6
 ```
 ## 7.测试Kubernetes集群和Flannel网络
 
@@ -361,7 +361,7 @@ nginx-54458cd494-zp9zp   1/1     Running   0          3m57s
 ```Bash
 [root@linux-node5 ~]# vim /etc/salt/roster
 linux-node5:
-  host: 192.168.150.145
+  host: 192.168.245.132
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -434,6 +434,4 @@ kube-proxy-zgg6t          1/1     Running   2          16h
 ```
 #### 如果你觉得这个项目不错，欢迎各位打赏，你的打赏是对我们的认可，是我们的动力。
 
-![支付宝支付](https://skymyyang.github.io/img/zfb3.png)
-
-![微信支付](https://skymyyang.github.io/img/wx1.png)
+![微信支付](https://github.com/sky-daiji/salt-kubernetes/blob/master/images/weixin.png)
