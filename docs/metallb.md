@@ -32,10 +32,10 @@ $ kubectl apply -f metallb.yaml
 [root@linux-node1 metallb]# kubectl get pod -n metallb-system  -o wide
 NAME                          READY   STATUS    RESTARTS   AGE   IP                NODE          NOMINATED NODE   READINESS GATES
 controller-7cc9c87cfb-6jl2p   1/1     Running   0          22h   10.2.86.4         linux-node2   <none>           <none>
-speaker-5w26c                 1/1     Running   0          22h   192.168.245.128   linux-node4   <none>           <none>
-speaker-bbf54                 1/1     Running   0          22h   192.168.245.129   linux-node1   <none>           <none>
-speaker-j627k                 1/1     Running   0          22h   192.168.245.130   linux-node2   <none>           <none>
-speaker-z9r7h                 1/1     Running   0          22h   192.168.245.131   linux-node3   <none>           <none>
+speaker-5w26c                 1/1     Running   0          22h   192.168.245.131   linux-node4   <none>           <none>
+speaker-bbf54                 1/1     Running   0          22h   192.168.245.128   linux-node1   <none>           <none>
+speaker-j627k                 1/1     Running   0          22h   192.168.245.129   linux-node2   <none>           <none>
+speaker-z9r7h                 1/1     Running   0          22h   192.168.245.130   linux-node3   <none>           <none>
 ```
 目前还没有宣布任何内容，因为我们没有提供ConfigMap，也没有提供负载均衡地址的服务。
 接下来我们要生成一个 Configmap 文件，为 Metallb 设置网址范围以及协议相关的选择和配置，这里以一个简单的二层配置为例:
