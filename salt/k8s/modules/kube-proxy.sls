@@ -6,7 +6,7 @@
 # # Description:  Kubernetes Proxy
 # #******************************************
 
-{% set k8s_version = "k8s-v1.13.5" %}
+{% set k8s_version = "k8s-v1.13.6" %}
 
 include:
   - k8s.modules.cni
