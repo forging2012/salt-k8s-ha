@@ -18,7 +18,7 @@ service/kubernetes-dashboard created
 
 ## 访问Dashboard
 
-    https://192.168.245.128:30000
+    https://192.168.150.141:30000
 
 用户名:admin  密码：admin 选择Token令牌模式登录。
 

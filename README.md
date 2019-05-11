@@ -1,15 +1,15 @@
 # SaltStack自动化部署HA-Kubernetes
-- 本项目在GitHub上，会不定期更新，大家也可以提交ISSUE，地址为：`https://github.com/sky-daiji/salt-k8s-ha`
+- 本项目在GitHub上，会不定期更新，大家也可以提交ISSUE，地址为：`https://github.com/skymyyang/salt-k8s-ha`
 - SaltStack自动化部署Kubernetes v1.13.4版本（支持HA、TLS双向认证、RBAC授权、Flannel网络、ETCD集群、Kuber-Proxy使用LVS等）。
 
 
-## 版本明细：Release-v1.13.6
+## 版本明细：Release-v1.13.5
 - 测试通过系统：CentOS 7.6
-- Kernel Version: 4.18.9-1.el7.elrepo.x86_64
+- Kernel Version: 4.18.16-1.el7.elrepo.x86_64
 - salt-ssh:     salt-ssh 2019.2.0-1
-- Kubernetes：  v1.13.6
-- Etcd:         v3.3.12
-- Docker:       18.09.3
+- Kubernetes：  v1.13.5
+- Etcd:         v3.3.13
+- Docker:       v18.09.2
 - Flannel：     v0.11.0
 - CNI-Plugins： v0.7.4
 - nginx:        v1.15.3
@@ -18,30 +18,37 @@
 
 IP地址 | Hostname | 最小配置 | Kernel Version
 ---|--- | --- | --- |
-192.168.245.128 | linux-node1 | Centos7.6 2G 2CPU | 4.18.9-1.el7.elrepo.x86_64
-192.168.245.129 | linux-node2 | Centos7.6 2G 2CPU | 4.18.9-1.el7.elrepo.x86_64
-192.168.245.130 | linux-node3 | Centos7.6 2G 2CPU | 4.18.9-1.el7.elrepo.x86_64
-192.168.245.131 | linux-node4 | Centos7.6 1G 1CPU | 4.18.9-1.el7.elrepo.x86_64
+192.168.150.141 | linux-node1 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
+192.168.150.142 | linux-node2 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
+192.168.150.143 | linux-node3 | Centos7.6 2G 2CPU | 4.18.16-1.el7.elrepo.x86_64
+192.168.150.144 | linux-node4 | Centos7.6 1G 1CPU | 4.18.16-1.el7.elrepo.x86_64
 
 ## 架构介绍
 1. 使用Salt Grains进行角色定义，增加灵活性。
 2. 使用Salt Pillar进行配置项管理，保证安全性。
 3. 使用Salt SSH执行状态，不需要安装Agent，保证通用性。
-4. 使用Kubernetes当前稳定版本v1.13.6，保证稳定性。
+4. 使用Kubernetes当前稳定版本v1.13.5，保证稳定性。
 5. 使用nginx来保证集群的高可用。
 6. KeepAlive+VIP的形式完成高可用的缺点
     - 受限于使用者的网络，无法适用于SDN网络，比如Aliyun的VPC
     - 虽然是高可用的，但是流量还是单点的，所有node的的网络I/O都会高度集中于一台机器上（VIP)，一旦集群节点增多，pod增多，单机的网络I/O迟早是网络隐患。
 7. 本文的高可用可通用于任何云上的SDN环境和自建机房环境，列如阿里云的VPC环境中
+8. 本架构ETCD集群使用的是HTTP协议。
+
+## 关于ETCD要不要使用TLS？
+
+1. 首先TLS的目的是为了鉴权为了防止别人任意的连接上你的etcd集群。其实意思就是说如果你要放到公网上的ETCD集群，并开放端口，我建议你一定要用TLS。
+2. 如果你的ETCD集群跑在一个内网环境比如（VPC环境），而且你也不会开放ETCD端口，你的ETCD跑在防火墙之后，一个安全的局域网中，那么你用不用TLS，都行。
 
 ## 技术交流QQ群（加群请备注来源于Github）：
+
 - Docker&Kubernetes：796163694
 
 - 本教程的来源于以下教程而生成，在此特别感谢两位作者。
 
-  和我一步步部署 kubernetes 集群   `https://github.com/opsnull/follow-me-install-kubernetes-cluster`
+  1. 和我一步步部署 kubernetes 集群   `https://github.com/opsnull/follow-me-install-kubernetes-cluster`
 
-  SaltStack自动化部署Kubernetes    `https://github.com/unixhot/salt-kubernetes`
+  2. SaltStack自动化部署Kubernetes    `https://github.com/unixhot/salt-kubernetes`
 
 ## 案例架构图
 
@@ -71,10 +78,10 @@ linux-node4
 [root@linux-node1 ~]# cat /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-192.168.245.128 linux-node1
-192.168.245.129 linux-node2
-192.168.245.130 linux-node3
-192.168.245.131 linux-node4
+192.168.150.141 linux-node1
+192.168.150.142 linux-node2
+192.168.150.143 linux-node3
+192.168.150.144 linux-node4
 ```
 
 3. 关闭SELinux和防火墙以及NetworkManager
@@ -116,35 +123,32 @@ linux-node4
 [root@linux-node1 ~]# yum install -y salt-ssh git unzip p7zip
 ```
 
-2.2 获取本项目 `1.13.6` 分支代码，并放置在 `/srv` 目录
+2.2 获取本项目 `1.13.5` 分支代码，并放置在 `/srv` 目录
 
 ```bash
-[root@linux-node1 ~]# git clone -b 1.13.6 https://github.com/sky-daiji/salt-k8s-ha.git
+[root@linux-node1 ~]# git clone -b 1.13.5 https://github.com/skymyyang/salt-k8s-ha.git
 [root@linux-node1 ~]# cd salt-k8s-ha/
 [root@linux-node1 ~]# mv * /srv/
 [root@linux-node1 srv]# /bin/cp /srv/roster /etc/salt/roster
 [root@linux-node1 srv]# /bin/cp /srv/master /etc/salt/master
 ```
 
-2.4 下载二进制文件，也可以自行官方下载，为了方便国内用户访问，请在百度云盘下载,下载 `k8s-v1.13.6-auto` 。
+2.4 下载二进制文件，也可以自行官方下载，为了方便国内用户访问，请在百度云盘下载,下载 `k8s-v1.13.5-auto.7z` 。
 下载完成后，将文件移动到 `/srv/salt/k8s/` 目录下，并解压，注意是 `files` 目录在 `/srv/salt/k8s/`目录下。
-Kubernetes二进制文件下载地址： 链接：`https://pan.baidu.com/s/16BLdxPKfIJgWDXTMFLt8yA`
-提取码：`6awv`
+Kubernetes二进制文件下载地址： 链接：`https://pan.baidu.com/s/1CdhDg_PeHXrKZT8NrgXB1Q`
+提取码：`1kmo`
 
 ```bash
 [root@linux-node1 ~]# cd /srv/salt/k8s/
-[root@linux-node1 k8s]# unzip k8s-v1.13.6-auto.zip
-[root@linux-node1 k8s]# cd k8s-v1.13.3-auto/
-[root@linux-node1 k8s-v1.13.6-auto]# mv files/ /srv/salt/k8s/
-[root@linux-node1 k8s-v1.13.6-auto]# cd ..
-[root@k8s-master k8s]# rm -rf k8s-v1.13.6-auto*
+[root@linux-node1 k8s]# 7za x k8s-v1.13.5-auto.7z -r -o./
+[root@linux-node1 k8s]# rm -f k8s-v1.13.5-auto.7z
 [root@linux-node1 k8s]# ls -l files/
 total 0
 drwx------ 2 root root  94 Mar 18 13:41 cfssl-1.2
 drwx------ 2 root root 195 Mar 18 13:41 cni-plugins-amd64-v0.7.4
-drwx------ 3 root root 123 Mar 18 13:41 etcd-v3.3.12-linux-amd64
-drwx------ 2 root root  47 Mar 18 13:41 flannel-v0.11.0-linux-amd64
-drwx------ 3 root root  17 Mar 18 13:41 k8s-v1.13.6
+drwx------ 3 root root 123 Mar 18 13:41 etcd-v3.3.10-linux-amd64
+drwx------ 2 root root  47 Mar 18 13:41 flannel-v0.10.0-linux-amd64
+drwx------ 3 root root  17 Mar 18 13:41 k8s-v1.13.4
 drwx------ 2 root root  33 Mar 18 20:17 nginx-1.15.3
 ```
 
@@ -157,7 +161,7 @@ drwx------ 2 root root  33 Mar 18 20:17 nginx-1.15.3
 ```yaml
 [root@linux-node1 ~]# vim /etc/salt/roster
 linux-node1:
-  host: 192.168.245.128
+  host: 192.168.150.141
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -167,7 +171,7 @@ linux-node1:
       etcd-name: etcd-node1
 
 linux-node2:
-  host: 192.168.245.129
+  host: 192.168.150.142
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -177,7 +181,7 @@ linux-node2:
       etcd-name: etcd-node2
 
 linux-node3:
-  host: 192.168.245.130
+  host: 192.168.150.143
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -187,7 +191,7 @@ linux-node3:
       etcd-name: etcd-node3
 
 linux-node4:
-  host: 192.168.245.131
+  host: 192.168.150.144
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -199,9 +203,9 @@ linux-node4:
 ```bash
 [root@k8s-m1 ~]# vim /srv/pillar/k8s.sls
 #设置Master的IP地址(必须修改)
-MASTER_IP_M1: "192.168.245.128"
-MASTER_IP_M2: "192.168.245.129"
-MASTER_IP_M3: "192.168.245.130"
+MASTER_IP_M1: "192.168.150.141"
+MASTER_IP_M2: "192.168.150.142"
+MASTER_IP_M3: "192.168.150.143"
 #设置Master的HOSTNAME完整的FQDN名称(必须修改)
 MASTER_H1: "linux-node1"
 MASTER_H2: "linux-node2"
@@ -211,12 +215,12 @@ MASTER_H3: "linux-node3"
 KUBE_APISERVER: "https://127.0.0.1:8443"
 
 #设置ETCD集群访问地址（必须修改）
-ETCD_ENDPOINTS: "https://192.168.245.128:2379,https://192.168.245.129:2379,https://192.168.245.130:2379"
+ETCD_ENDPOINTS: "http://192.168.150.141:2379,http://192.168.150.142:2379,http://192.168.150.143:2379"
 
 FLANNEL_ETCD_PREFIX: "/kubernetes/network"
 
 #设置ETCD集群初始化列表（必须修改）
-ETCD_CLUSTER: "etcd-node1=https://192.168.245.128:2380,etcd-node2=https://192.168.245.129:2380,etcd-node3=https://192.168.245.130:2380"
+ETCD_CLUSTER: "etcd-node1=http://192.168.150.141:2380,etcd-node2=http://192.168.150.142:2380,etcd-node3=http://192.168.150.143:2380"
 
 #通过Grains FQDN自动获取本机IP地址，请注意保证主机名解析到本机IP地址
 NODE_IP: {{ grains['fqdn_ip4'][0] }}
@@ -250,10 +254,10 @@ CLUSTER_DNS_DOMAIN: "cluster.local."
 #DOCKER_REGISTRY: "https://192.168.150.135:5000"
 
 #设置Master的VIP地址(必须修改)
-MASTER_VIP: "192.168.245.253"
+MASTER_VIP: "192.168.150.253"
 
 #设置网卡名称
-VIP_IF: "{{ grains['ip4_interfaces'].keys()[1] }}"
+VIP_IF: "ens32"
 
 ```
 
@@ -292,14 +296,8 @@ VIP_IF: "{{ grains['ip4_interfaces'].keys()[1] }}"
 ```
 #先验证etcd
 [root@linux-node1 ~]# source /etc/profile
-[root@linux-node1 ~]# etcdctl --endpoints=https://192.168.245.128:2379 \
-  --ca-file=/opt/kubernetes/ssl/ca.pem \
-  --cert-file=/opt/kubernetes/ssl/etcd.pem \
-  --key-file=/opt/kubernetes/ssl/etcd-key.pem cluster-health
-[root@linux-node1 ~]# etcdctl --endpoints=https://192.168.245.128:2379 \
-  --ca-file=/opt/kubernetes/ssl/ca.pem \
-  --cert-file=/opt/kubernetes/ssl/etcd.pem \
-  --key-file=/opt/kubernetes/ssl/etcd-key.pem member list
+[root@linux-node1 ~]# etcdctl --endpoints=http://192.168.150.141:2379 cluster-health
+[root@linux-node1 ~]# etcdctl --endpoints=http://192.168.150.141:2379 member list
 [root@linux-node1 ~]# kubectl get cs
 NAME                 STATUS    MESSAGE             ERROR
 controller-manager   Healthy   ok                  
@@ -309,10 +307,10 @@ etcd-1               Healthy   {"health":"true"}
 etcd-0               Healthy   {"health":"true"}  
 [root@linux-node1 ~]# kubectl get node
 NAME          STATUS   ROLES    AGE     VERSION
-linux-node1   Ready    master   3h12m   v1.13.6
-linux-node2   Ready    master   3h12m   v1.13.6
-linux-node3   Ready    master   3h13m   v1.13.6
-linux-node4   Ready    node     3h14m   v1.13.6
+linux-node1   Ready    master   3h12m   v1.13.5
+linux-node2   Ready    master   3h12m   v1.13.5
+linux-node3   Ready    master   3h13m   v1.13.5
+linux-node4   Ready    node     3h14m   v1.13.5
 ```
 ## 7.测试Kubernetes集群和Flannel网络
 
@@ -364,7 +362,7 @@ nginx-54458cd494-zp9zp   1/1     Running   0          3m57s
 ```Bash
 [root@linux-node5 ~]# vim /etc/salt/roster
 linux-node5:
-  host: 192.168.245.132
+  host: 192.168.150.145
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -437,4 +435,6 @@ kube-proxy-zgg6t          1/1     Running   2          16h
 ```
 #### 如果你觉得这个项目不错，欢迎各位打赏，你的打赏是对我们的认可，是我们的动力。
 
-![微信支付](https://github.com/sky-daiji/salt-kubernetes/blob/master/images/weixin.png)
+![支付宝支付](https://skymyyang.github.io/img/zfb3.png)
+
+![微信支付](https://skymyyang.github.io/img/wx1.png)

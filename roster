@@ -7,17 +7,17 @@
 #******************************************
 
 linux-node1:
-  host: 192.168.245.128
+  host: 192.168.150.141
   user: root
   priv: /root/.ssh/id_rsa
-  minion_opts:
+  minion_opts: 
     grains:
       k8s-role: master
       etcd-role: node
       etcd-name: etcd-node1
 
 linux-node2:
-  host: 192.168.245.129
+  host: 192.168.150.142
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -27,7 +27,7 @@ linux-node2:
       etcd-name: etcd-node2
 
 linux-node3:
-  host: 192.168.245.130
+  host: 192.168.150.143
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
@@ -37,7 +37,7 @@ linux-node3:
       etcd-name: etcd-node3
 
 linux-node4:
-  host: 192.168.245.131
+  host: 192.168.150.144
   user: root
   priv: /root/.ssh/id_rsa
   minion_opts:
