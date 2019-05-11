@@ -6,7 +6,7 @@
 # Description:  Flannel
 #******************************************
 {% set flannel_version = "flannel-v0.11.0-linux-amd64" %}
-{% set etcd_version = "etcd-v3.3.10-linux-amd64" %}
+{% set etcd_version = "etcd-v3.3.12-linux-amd64" %}
 
 flannel-key:
   file.managed:
