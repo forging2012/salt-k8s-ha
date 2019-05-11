@@ -15,7 +15,6 @@ ExecStart=/opt/kubernetes/bin/flanneld \
   -etcd-prefix={{ FLANNEL_ETCD_PREFIX }} \
   -iface={{ VIP_IF }} \
   -ip-masq \
-  -kube-subnet-mgr
 ExecStartPost=/opt/kubernetes/bin/mk-docker-opts.sh -k DOCKER_NETWORK_OPTIONS -d /run/flannel/docker
 Restart=always
 RestartSec=5
