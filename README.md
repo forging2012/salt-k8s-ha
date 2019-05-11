@@ -3,7 +3,7 @@
 - SaltStack自动化部署Kubernetes v1.13.6版本（支持HA、TLS双向认证、RBAC授权、Flannel网络、ETCD集群、Kuber-Proxy使用LVS等）。
 
 
-## 版本明细：Release-v1.13.5
+## 版本明细：Release-v1.13.6
 - 测试通过系统：CentOS 7.6
 - Kernel Version: 4.18.9-1.el7.elrepo.x86_64
 - salt-ssh:     salt-ssh 2019.2.0-1
