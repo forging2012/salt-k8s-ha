@@ -133,10 +133,7 @@ linux-node4
 [root@linux-node1 srv]# /bin/cp /srv/master /etc/salt/master
 ```
 
-2.4 下载二进制文件，也可以自行官方下载，为了方便国内用户访问，请在百度云盘下载,下载 `k8s-v1.13.6-auto.zip` 。
-下载完成后，将文件移动到 `/srv/salt/k8s/` 目录下，并解压，注意是 `files` 目录在 `/srv/salt/k8s/`目录下。
-Kubernetes二进制文件下载地址： 链接：`https://pan.baidu.com/s/1PXibbPX1S0Xmaqjbm_NVNQ`
-提取码：`kbyx`
+2.4 下载二进制文件，也可以自行官方下载，有需要的朋友可以用翻墙软件shadowsocks,（[翻墙软件地址](https://portal.shadowsocks.ch/aff.php?aff=25612 "翻墙软件地址")）为了方便国内用户访问，请在百度云盘下载,下载 `k8s-v1.13.6-auto.zip` 。下载完成后，将文件移动到 `/srv/salt/k8s/` 目录下，并解压，注意是 `files` 目录在 `/srv/salt/k8s/`目录下。Kubernetes二进制文件下载地址： 链接：`https://pan.baidu.com/s/1PXibbPX1S0Xmaqjbm_NVNQ` 提取码：`kbyx`
 
 ```bash
 [root@linux-node1 ~]# cd /srv/salt/k8s/
@@ -434,5 +431,6 @@ kube-proxy-wpfrh          1/1     Running   2          16h
 kube-proxy-zgg6t          1/1     Running   2          16h
 ```
 #### 如果你觉得这个项目不错，欢迎各位打赏，你的打赏是对我们的认可，是我们的动力。
+
 
 ![微信支付](https://github.com/sky-daiji/salt-kubernetes/blob/master/images/weixin.png)
