@@ -396,9 +396,9 @@ linux-node5:
 
 ```bash
 kubectl describe node linux-node1
-kubectl taint node k8s-m1 node-role.kubernetes.io/master=linux-node1:PreferNoSchedule
-kubectl taint node k8s-m2 node-role.kubernetes.io/master=linux-node2:PreferNoSchedule
-kubectl taint node k8s-m3 node-role.kubernetes.io/master=linux-node3:PreferNoSchedule
+kubectl taint node linux-node1 node-role.kubernetes.io/master=linux-node1:PreferNoSchedule
+kubectl taint node linux-node2 node-role.kubernetes.io/master=linux-node2:PreferNoSchedule
+kubectl taint node linux-node3 node-role.kubernetes.io/master=linux-node3:PreferNoSchedule
 ```
 
 ## 10.已知的错误。
