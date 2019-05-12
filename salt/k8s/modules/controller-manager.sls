@@ -7,10 +7,6 @@
 #********************************************
 {% set k8s_version = "k8s-v1.13.6" %}
 
-
-
-
-
 kube-controller-manager-csr-json:
   file.managed:
     - name: /opt/kubernetes/ssl/kube-controller-manager-csr.json
