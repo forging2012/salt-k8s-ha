@@ -108,8 +108,8 @@ bash ./check-config.sh
 ####  需要设定 `/etc/hosts` 解析到所有集群主机
 
 ```
-192.168.150.141 linux-node1
-192.168.150.142 linux-node2
-192.168.150.143 linux-node3
-192.168.150.144 linux-node4
+192.168.245.128 linux-node1
+192.168.245.129 linux-node2
+192.168.245.130 linux-node3
+192.168.245.131 linux-node4
 ```
