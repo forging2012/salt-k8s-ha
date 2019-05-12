@@ -133,8 +133,7 @@ linux-node4
 [root@linux-node1 srv]# /bin/cp /srv/master /etc/salt/master
 ```
 
-2.4 下载二进制文件，可以自行官方下载，有需要的朋友可以用翻墙软件`shadowsocks`进行下载,（[翻墙软件地址](https://portal.shadowsocks.ch/aff.php?aff=25612 "翻墙软件地址")）。
-为了方便国内用户访问，请在百度云盘下载,下载 `k8s-v1.13.6-auto.zip` 。下载完成后，将文件移动到 `/srv/salt/k8s/` 目录下，并解压，注意是 `files` 目录在 `/srv/salt/k8s/`目录下。二进制文件下载链接：`https://pan.baidu.com/s/1PXibbPX1S0Xmaqjbm_NVNQ` 提取码：`kbyx`
+2.4 下载二进制文件，可以自行官方下载，有需要的朋友可以用翻墙软件`shadowsocks`进行下载,（[翻墙软件地址](https://portal.shadowsocks.ch/aff.php?aff=25612 "翻墙软件地址")）。为了方便国内用户访问，请在百度云盘下载 `k8s-v1.13.6-auto.zip` 。下载完成后，将文件移动到 `/srv/salt/k8s/` 目录下，并解压，注意是 `files` 目录在 `/srv/salt/k8s/`目录下。二进制文件下载链接：`https://pan.baidu.com/s/1PXibbPX1S0Xmaqjbm_NVNQ` 提取码：`kbyx`
 
 ```bash
 [root@linux-node1 ~]# cd /srv/salt/k8s/
